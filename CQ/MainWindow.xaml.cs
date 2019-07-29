@@ -27,5 +27,10 @@ namespace CQ
             InitializeComponent();
             DataList.DataContext = models;
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            PLCService.Instance.Connect();
+        }
     }
 }
