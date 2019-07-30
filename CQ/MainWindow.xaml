@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CQ"
         mc:Ignorable="d"
-        Title="点胶数据记录" Height="450" Width="800" ResizeMode="CanMinimize" Loaded="Window_Loaded">
+        Title="点胶数据记录" Height="450" Width="800" ResizeMode="CanMinimize" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -16,10 +16,11 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Label Content="当前条码:" Grid.Row="0" Grid.Column="0" />
-        <TextBox Width="200" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0" IsEnabled="False" />
+        <TextBox x:Name="Barcode" Text="123" Width="200" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0" IsEnabled="False" />
         <ListView x:Name="DataList" ItemsSource="{Binding}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn Width="100" Header="序号" DisplayMemberBinding="{Binding Path=Id}" />
                     <GridViewColumn Width="100" Header="条码" DisplayMemberBinding="{Binding Path=QRCode}" />
                     <GridViewColumn Width="100" Header="AB股流量" DisplayMemberBinding="{Binding Path=ABFlow}" />
                     <GridViewColumn Width="100" Header="A股压力" DisplayMemberBinding="{Binding Path=APressure}" />

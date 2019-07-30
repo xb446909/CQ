@@ -111,5 +111,35 @@ namespace CQ
 
             return true;
         }
+
+        public UInt32 ReadUInt32(string addr)
+        {
+            var val = siemensTcpNet.ReadUInt32(addr);
+            if (val.IsSuccess)
+            {
+                return val.Content;
+            }
+            return 0;
+        }
+
+        public double ReadDouble(string addr)
+        {
+            var val = siemensTcpNet.ReadDouble(addr);
+            if (val.IsSuccess)
+            {
+                return val.Content;
+            }
+            return 0.0;
+        }
+
+        public bool ReadBool(string addr)
+        {
+            var val = siemensTcpNet.ReadBool(addr);
+            if (val.IsSuccess)
+            {
+                return val.Content;
+            }
+            return false;
+        }
     }
 }

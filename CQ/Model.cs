@@ -8,6 +8,7 @@ namespace CQ
 {
     class Model
     {
+        public string Id { set; get; }
         public string QRCode { set; get; }
         public string ABFlow { set; get; }
         public string APressure { set; get; }
