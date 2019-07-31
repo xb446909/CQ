@@ -45,6 +45,12 @@ namespace CQ
         private void ThreadProc()
         {
             string str = System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            string ExcelFilePath = IniService.Instance.ReadIniData("保存", "Excel地址", "D:\\", str + "Config.ini");
+            if (!ExcelFilePath.EndsWith("\\"))
+            {
+                ExcelFilePath += "\\";
+            }
+
             string ID = IniService.Instance.ReadIniData("序号", "地址", "DB2.0", str + "Config.ini");
             string ABFlow = IniService.Instance.ReadIniData("AB股流量", "地址", "DB2.4", str + "Config.ini");
             string APressure = IniService.Instance.ReadIniData("A股压力", "地址", "DB2.8", str + "Config.ini");
@@ -78,6 +84,13 @@ namespace CQ
 
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
+                    if ((nID == 0) && (models.Count > 0))
+                    {
+                        string FileName = ExcelFilePath + DateTime.Now.ToString("yyyyMMdd") + ".xlsx";
+                        ExcelService.Instance.Save(FileName, models);
+                        models.Clear();
+                    }
+
                         models.Add(new Model()
                         {
                             Id = nID.ToString(),
