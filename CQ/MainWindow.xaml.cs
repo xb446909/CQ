@@ -33,14 +33,17 @@ namespace CQ
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            SerialPortService.Instance.SerialPort_ReadNewLine 
             if (PLCService.Instance.Connect() == false)
             {
                 MessageBox.Show("连接PLC失败!");
-                //return;
+                return;
             }
             thread = new Thread(new ThreadStart(ThreadProc));
             thread.Start();
         }
+
+        private void SerialPort 
 
         private void ThreadProc()
         {

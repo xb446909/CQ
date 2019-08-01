@@ -8,6 +8,7 @@ using System.Windows;
 
 namespace CQ
 {
+    delegate void ReadNewLine(string str);
     class SerialPortService
     {
         private static SerialPortService _intance = null;
@@ -30,8 +31,8 @@ namespace CQ
             }
         }
 
-        SerialPort serialPort = null;
-
+        private SerialPort serialPort = null;
+        public ReadNewLine SerialPort_ReadNewLine = null;
         private SerialPortService()
         {
             serialPort = new SerialPort();
@@ -61,7 +62,20 @@ namespace CQ
                 return;
             }
             serialPort.DataBits = nDataBits;
+            if (int.TryParse(StopBits, out int nStopBits) == false)
+            {
+                MessageBox.Show("停止位设置错误!");
+                return;
+            }
+            serialPort.StopBits = (System.IO.Ports.StopBits)nStopBits;
+            serialPort.NewLine = "\n";
+            serialPort.DataReceived += SerialPort_DataReceived;
+            serialPort.Open();
+        }
 
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            SerialPort_ReadNewLine?.Invoke(serialPort.ReadLine());
         }
 
         public void OpenSerialPort()
