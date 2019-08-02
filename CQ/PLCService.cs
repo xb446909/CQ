@@ -141,5 +141,24 @@ namespace CQ
             }
             return false;
         }
+
+        public float ReadFloat(string addr)
+        {
+            var val = siemensTcpNet.ReadFloat(addr);
+            if (val.IsSuccess)
+            {
+                return (val.Content / 100.0f);
+            }
+            return 0.0f;
+        }
+
+        public void WriteUInt32(string addr, UInt32 val)
+        {
+            var ret = siemensTcpNet.Write(addr, val);
+            if (!(ret.IsSuccess))
+            {
+                MessageBox.Show("写入地址:" + addr + "失败!");
+            }
+        }
     }
 }

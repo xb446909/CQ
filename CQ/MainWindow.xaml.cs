@@ -50,14 +50,18 @@ namespace CQ
 
         private void SerialPort_NewLine(int nSerialPort, string str)
         {
+            string addr;
             if (nSerialPort == 1)
             {
+                addr = IniService.Instance.ReadIniData("扫码回复1", "地址", "M60", str + "Config.ini");
                 Dispatcher.BeginInvoke(new Action(() => { Barcode1.Text = str; }));
             }
             else
             {
+                addr = IniService.Instance.ReadIniData("扫码回复2", "地址", "M64", str + "Config.ini");
                 Dispatcher.BeginInvoke(new Action(() => { Barcode2.Text = str; }));
             }
+            PLCService.Instance.WriteUInt32(addr, 1);
         }
 
         private void ThreadProc1()
@@ -90,7 +94,7 @@ namespace CQ
                 if ((bLastStart == false) && (bStart == true))
                 {
                     UInt32 nID = PLCService.Instance.ReadUInt32(ID);
-                    UInt32 nFlow = PLCService.Instance.ReadUInt32(Flow);
+                    float dbFlow = PLCService.Instance.ReadFloat(Flow);
                     UInt32 nAPressure = PLCService.Instance.ReadUInt32(APressure);
                     UInt32 nBPressure = PLCService.Instance.ReadUInt32(BPressure);
 
@@ -109,7 +113,7 @@ namespace CQ
                             Time = DateTime.Now.ToString("T"),
                             Id = nID.ToString(),
                             QRCode = Barcode1.Text,
-                            Flow = nFlow.ToString(),
+                            Flow = dbFlow.ToString(),
                             APressure = nAPressure.ToString(),
                             BPressure = nBPressure.ToString(),
                         });
@@ -117,11 +121,7 @@ namespace CQ
 
                     
                 }
-                else
-                {
-                    bLastStart = bStart;
-                }
-                
+                bLastStart = bStart;
             }
         }
 
@@ -155,7 +155,7 @@ namespace CQ
                 if ((bLastStart == false) && (bStart == true))
                 {
                     UInt32 nID = PLCService.Instance.ReadUInt32(ID);
-                    UInt32 nFlow = PLCService.Instance.ReadUInt32(Flow);
+                    float dbFlow = PLCService.Instance.ReadFloat(Flow);
                     UInt32 nAPressure = PLCService.Instance.ReadUInt32(APressure);
                     UInt32 nBPressure = PLCService.Instance.ReadUInt32(BPressure);
 
@@ -174,19 +174,14 @@ namespace CQ
                             Time = DateTime.Now.ToString("T"),
                             Id = nID.ToString(),
                             QRCode = Barcode2.Text,
-                            Flow = nFlow.ToString(),
+                            Flow = dbFlow.ToString(),
                             APressure = nAPressure.ToString(),
                             BPressure = nBPressure.ToString(),
                         });
                     }));
 
-
                 }
-                else
-                {
-                    bLastStart = bStart;
-                }
-
+                bLastStart = bStart;
             }
         }
 
