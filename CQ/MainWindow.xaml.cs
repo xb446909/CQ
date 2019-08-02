@@ -96,7 +96,7 @@ namespace CQ
 
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                    if ((nID == 0) && (models1.Count > 0))
+                    if ((nID == 1) && (models1.Count > 0))
                     {
                         string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + "_1.xlsx";
                         ExcelService.Instance.Save(FileName, models1);
@@ -161,7 +161,7 @@ namespace CQ
 
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        if ((nID == 0) && (models2.Count > 0))
+                        if ((nID == 1) && (models2.Count > 0))
                         {
                             string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + "_2.xlsx";
                             ExcelService.Instance.Save(FileName, models2);

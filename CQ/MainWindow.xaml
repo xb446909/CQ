@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CQ"
         mc:Ignorable="d"
-        Title="点胶数据记录" Height="800" Width="1620" ResizeMode="CanMinimize" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="点胶数据记录" Height="600" Width="850" ResizeMode="CanMinimize" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -22,13 +22,13 @@
         <ListView x:Name="DataList1" ItemsSource="{Binding}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="100" Header="日期" DisplayMemberBinding="{Binding Path=Date}" />
-                    <GridViewColumn Width="100" Header="时间" DisplayMemberBinding="{Binding Path=Time}" />
-                    <GridViewColumn Width="100" Header="序号" DisplayMemberBinding="{Binding Path=Id}" />
-                    <GridViewColumn Width="200" Header="模块条形码" DisplayMemberBinding="{Binding Path=QRCode}" />
-                    <GridViewColumn Width="100" Header="流量/ml" DisplayMemberBinding="{Binding Path=Flow}" />
-                    <GridViewColumn Width="100" Header="A胶压力/psi" DisplayMemberBinding="{Binding Path=APressure}" />
-                    <GridViewColumn Width="100" Header="B胶压力/psi" DisplayMemberBinding="{Binding Path=BPressure}" />
+                    <GridViewColumn Width="50" Header="日期" DisplayMemberBinding="{Binding Path=Date}" />
+                    <GridViewColumn Width="50" Header="时间" DisplayMemberBinding="{Binding Path=Time}" />
+                    <GridViewColumn Width="50" Header="序号" DisplayMemberBinding="{Binding Path=Id}" />
+                    <GridViewColumn Width="100" Header="模块条形码" DisplayMemberBinding="{Binding Path=QRCode}" />
+                    <GridViewColumn Width="50" Header="流量/ml" DisplayMemberBinding="{Binding Path=Flow}" />
+                    <GridViewColumn Width="50" Header="A胶压力/psi" DisplayMemberBinding="{Binding Path=APressure}" />
+                    <GridViewColumn Width="50" Header="B胶压力/psi" DisplayMemberBinding="{Binding Path=BPressure}" />
                 </GridView>
             </ListView.View>
         </ListView>
@@ -37,13 +37,13 @@
         <ListView x:Name="DataList2" ItemsSource="{Binding}" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="100" Header="日期" DisplayMemberBinding="{Binding Path=Date}" />
-                    <GridViewColumn Width="100" Header="时间" DisplayMemberBinding="{Binding Path=Time}" />
-                    <GridViewColumn Width="100" Header="序号" DisplayMemberBinding="{Binding Path=Id}" />
-                    <GridViewColumn Width="200" Header="模块条形码" DisplayMemberBinding="{Binding Path=QRCode}" />
-                    <GridViewColumn Width="100" Header="流量/ml" DisplayMemberBinding="{Binding Path=Flow}" />
-                    <GridViewColumn Width="100" Header="A胶压力/psi" DisplayMemberBinding="{Binding Path=APressure}" />
-                    <GridViewColumn Width="100" Header="B胶压力/psi" DisplayMemberBinding="{Binding Path=BPressure}" />
+                    <GridViewColumn Width="50" Header="日期" DisplayMemberBinding="{Binding Path=Date}" />
+                    <GridViewColumn Width="50" Header="时间" DisplayMemberBinding="{Binding Path=Time}" />
+                    <GridViewColumn Width="50" Header="序号" DisplayMemberBinding="{Binding Path=Id}" />
+                    <GridViewColumn Width="100" Header="模块条形码" DisplayMemberBinding="{Binding Path=QRCode}" />
+                    <GridViewColumn Width="50" Header="流量/ml" DisplayMemberBinding="{Binding Path=Flow}" />
+                    <GridViewColumn Width="50" Header="A胶压力/psi" DisplayMemberBinding="{Binding Path=APressure}" />
+                    <GridViewColumn Width="50" Header="B胶压力/psi" DisplayMemberBinding="{Binding Path=BPressure}" />
                 </GridView>
             </ListView.View>
         </ListView>
