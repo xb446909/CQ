@@ -64,8 +64,8 @@ namespace CQ
                 row0.CreateCell(1).SetCellValue("时间");
                 row0.CreateCell(1).SetCellValue("条码");
                 row0.CreateCell(2).SetCellValue("流量/ml");
-                row0.CreateCell(3).SetCellValue("A胶压力");
-                row0.CreateCell(4).SetCellValue("B胶压力");
+                row0.CreateCell(3).SetCellValue("A胶压力/psi");
+                row0.CreateCell(4).SetCellValue("B胶压力/psi");
 
                 for (int i = 0; i < models.Count; i++)
                 {

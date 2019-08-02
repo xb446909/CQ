@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace CQ
 {
-    delegate void ReadNewLine(string str);
+    delegate void ReadNewLine(int nPort, string str);
     class SerialPortService
     {
         private static SerialPortService _intance = null;
@@ -31,51 +31,75 @@ namespace CQ
             }
         }
 
-        private SerialPort serialPort = null;
+        private SerialPort serialPort1 = null;
+        private SerialPort serialPort2 = null;
         public ReadNewLine SerialPort_ReadNewLine = null;
-        private SerialPortService()
+
+        private SerialPort Open(string szSection)
         {
-            serialPort = new SerialPort();
+            SerialPort serialPort = new SerialPort();
             string str = System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            string PortName = IniService.Instance.ReadIniData("扫码枪", "串口号", "COM1", str + "Config.ini");
-            string BaudRate = IniService.Instance.ReadIniData("扫码枪", "波特率", "115200", str + "Config.ini");
-            string Parity = IniService.Instance.ReadIniData("扫码枪", "校验位", "0", str + "Config.ini");
-            string DataBits = IniService.Instance.ReadIniData("扫码枪", "数据位", "8", str + "Config.ini");
-            string StopBits = IniService.Instance.ReadIniData("扫码枪", "停止位", "1", str + "Config.ini");
+            string PortName = IniService.Instance.ReadIniData(szSection, "串口号", "COM1", str + "Config.ini");
+            string BaudRate = IniService.Instance.ReadIniData(szSection, "波特率", "115200", str + "Config.ini");
+            string Parity = IniService.Instance.ReadIniData(szSection, "校验位", "0", str + "Config.ini");
+            string DataBits = IniService.Instance.ReadIniData(szSection, "数据位", "8", str + "Config.ini");
+            string StopBits = IniService.Instance.ReadIniData(szSection, "停止位", "1", str + "Config.ini");
 
             serialPort.PortName = PortName;
             if (int.TryParse(BaudRate, out int nBaudRate) == false)
             {
                 MessageBox.Show("波特率设置错误!");
-                return;
+                return null;
             }
             serialPort.BaudRate = nBaudRate;
             if (int.TryParse(Parity, out int nParity) == false)
             {
                 MessageBox.Show("校验位设置错误!");
-                return;
+                return null;
             }
             serialPort.Parity = (System.IO.Ports.Parity)nParity;
             if (int.TryParse(DataBits, out int nDataBits) == false)
             {
                 MessageBox.Show("数据位设置错误!");
-                return;
+                return null;
             }
             serialPort.DataBits = nDataBits;
             if (int.TryParse(StopBits, out int nStopBits) == false)
             {
                 MessageBox.Show("停止位设置错误!");
-                return;
+                return null;
             }
             serialPort.StopBits = (System.IO.Ports.StopBits)nStopBits;
             serialPort.NewLine = "\r";
             serialPort.DataReceived += SerialPort_DataReceived;
-            serialPort.Open();
+            try
+            {
+                serialPort.Open();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+            return serialPort;
+        }
+        private SerialPortService()
+        {
+            serialPort1 = Open("扫码枪1");
+            serialPort2 = Open("扫码枪2");
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            SerialPort_ReadNewLine?.Invoke(serialPort.ReadLine());
+            SerialPort serialPort = sender as SerialPort;
+            if (serialPort == serialPort1)
+            {
+                SerialPort_ReadNewLine?.Invoke(1, serialPort.ReadLine());
+            }
+            else if (serialPort == serialPort2)
+            {
+                SerialPort_ReadNewLine?.Invoke(2, serialPort.ReadLine());
+            }
         }
 
         public void OpenSerialPort()
