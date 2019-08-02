@@ -68,7 +68,7 @@ namespace CQ
                 return;
             }
             serialPort.StopBits = (System.IO.Ports.StopBits)nStopBits;
-            serialPort.NewLine = "\n";
+            serialPort.NewLine = "\r";
             serialPort.DataReceived += SerialPort_DataReceived;
             serialPort.Open();
         }

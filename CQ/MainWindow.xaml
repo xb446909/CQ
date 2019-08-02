@@ -16,18 +16,17 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Label Content="当前条码:" Grid.Row="0" Grid.Column="0" />
-        <TextBox x:Name="Barcode" Text="123" Width="200" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0" IsEnabled="False" />
+        <TextBox x:Name="Barcode" Width="200" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0" IsEnabled="False" />
         <ListView x:Name="DataList" ItemsSource="{Binding}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn Width="100" Header="日期" DisplayMemberBinding="{Binding Path=Date}" />
+                    <GridViewColumn Width="100" Header="时间" DisplayMemberBinding="{Binding Path=Time}" />
                     <GridViewColumn Width="100" Header="序号" DisplayMemberBinding="{Binding Path=Id}" />
-                    <GridViewColumn Width="100" Header="条码" DisplayMemberBinding="{Binding Path=QRCode}" />
-                    <GridViewColumn Width="100" Header="AB股流量" DisplayMemberBinding="{Binding Path=ABFlow}" />
-                    <GridViewColumn Width="100" Header="A股压力" DisplayMemberBinding="{Binding Path=APressure}" />
-                    <GridViewColumn Width="100" Header="B股压力" DisplayMemberBinding="{Binding Path=BPressure}" />
-                    <GridViewColumn Width="100" Header="A股流量" DisplayMemberBinding="{Binding Path=AFlow}" />
-                    <GridViewColumn Width="100" Header="B股流量" DisplayMemberBinding="{Binding Path=BFlow}" />
-                    <GridViewColumn Width="100" Header="AB胶比例" DisplayMemberBinding="{Binding Path=ABRatio}" />
+                    <GridViewColumn Width="200" Header="模块条形码" DisplayMemberBinding="{Binding Path=QRCode}" />
+                    <GridViewColumn Width="100" Header="流量/ml" DisplayMemberBinding="{Binding Path=Flow}" />
+                    <GridViewColumn Width="100" Header="A胶压力/psi" DisplayMemberBinding="{Binding Path=APressure}" />
+                    <GridViewColumn Width="100" Header="B胶压力/psi" DisplayMemberBinding="{Binding Path=BPressure}" />
                 </GridView>
             </ListView.View>
         </ListView>

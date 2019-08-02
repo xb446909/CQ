@@ -33,7 +33,7 @@ namespace CQ
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            SerialPortService.Instance.SerialPort_ReadNewLine 
+            SerialPortService.Instance.SerialPort_ReadNewLine = SerialPort_NewLine;
             if (PLCService.Instance.Connect() == false)
             {
                 MessageBox.Show("连接PLC失败!");
@@ -43,7 +43,10 @@ namespace CQ
             thread.Start();
         }
 
-        private void SerialPort 
+        private void SerialPort_NewLine(string str)
+        {
+            Dispatcher.BeginInvoke(new Action(() => { Barcode.Text = str; }));
+        }
 
         private void ThreadProc()
         {
@@ -55,12 +58,9 @@ namespace CQ
             }
 
             string ID = IniService.Instance.ReadIniData("序号", "地址", "DB2.0", str + "Config.ini");
-            string ABFlow = IniService.Instance.ReadIniData("AB股流量", "地址", "DB2.4", str + "Config.ini");
+            string Flow = IniService.Instance.ReadIniData("流量", "地址", "DB2.4", str + "Config.ini");
             string APressure = IniService.Instance.ReadIniData("A股压力", "地址", "DB2.8", str + "Config.ini");
             string BPressure = IniService.Instance.ReadIniData("B股压力", "地址", "DB2.12", str + "Config.ini");
-            string AFlow = IniService.Instance.ReadIniData("A股流量", "地址", "DB2.16", str + "Config.ini");
-            string BFlow = IniService.Instance.ReadIniData("B股流量", "地址", "DB2.20", str + "Config.ini");
-            string ABRatio = IniService.Instance.ReadIniData("AB胶比例", "地址", "DB2.24", str + "Config.ini");
 
             string Start = IniService.Instance.ReadIniData("启动信号", "地址", "DB2.28", str + "Config.ini");
 
@@ -78,32 +78,28 @@ namespace CQ
                 if ((bLastStart == false) && (bStart == true))
                 {
                     UInt32 nID = PLCService.Instance.ReadUInt32(ID);
-                    UInt32 nABFlow = PLCService.Instance.ReadUInt32(ABFlow);
+                    UInt32 nFlow = PLCService.Instance.ReadUInt32(Flow);
                     UInt32 nAPressure = PLCService.Instance.ReadUInt32(APressure);
                     UInt32 nBPressure = PLCService.Instance.ReadUInt32(BPressure);
-                    UInt32 nAFlow = PLCService.Instance.ReadUInt32(AFlow);
-                    UInt32 nBFlow = PLCService.Instance.ReadUInt32(BFlow);
-                    UInt32 nABRatio = PLCService.Instance.ReadUInt32(ABRatio);
 
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                     if ((nID == 0) && (models.Count > 0))
                     {
-                        string FileName = ExcelFilePath + DateTime.Now.ToString("yyyyMMdd") + ".xlsx";
+                        string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + ".xlsx";
                         ExcelService.Instance.Save(FileName, models);
                         models.Clear();
                     }
 
                         models.Add(new Model()
                         {
+                            Date = DateTime.Now.ToString("d"),
+                            Time = DateTime.Now.ToString("T"),
                             Id = nID.ToString(),
                             QRCode = Barcode.Text,
-                            ABFlow = nABFlow.ToString(),
+                            Flow = nFlow.ToString(),
                             APressure = nAPressure.ToString(),
                             BPressure = nBPressure.ToString(),
-                            AFlow = nAFlow.ToString(),
-                            BFlow = nBFlow.ToString(),
-                            ABRatio = nABRatio.ToString()
                         });
                     }));
 

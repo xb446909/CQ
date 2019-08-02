@@ -61,25 +61,21 @@ namespace CQ
                 var sheet = workbook.CreateSheet();
                 var row0 = sheet.CreateRow(0);
                 row0.CreateCell(0).SetCellValue("序号");
+                row0.CreateCell(1).SetCellValue("时间");
                 row0.CreateCell(1).SetCellValue("条码");
-                row0.CreateCell(2).SetCellValue("AB股流量");
-                row0.CreateCell(3).SetCellValue("A股压力");
-                row0.CreateCell(4).SetCellValue("B股压力");
-                row0.CreateCell(5).SetCellValue("A股流量");
-                row0.CreateCell(6).SetCellValue("B股流量");
-                row0.CreateCell(7).SetCellValue("AB胶比例");
+                row0.CreateCell(2).SetCellValue("流量/ml");
+                row0.CreateCell(3).SetCellValue("A胶压力");
+                row0.CreateCell(4).SetCellValue("B胶压力");
 
                 for (int i = 0; i < models.Count; i++)
                 {
                     var row = sheet.CreateRow(i + 1);
                     row.CreateCell(0).SetCellValue(models[i].Id);
+                    row.CreateCell(0).SetCellValue(models[i].Time);
                     row.CreateCell(1).SetCellValue(models[i].QRCode);
-                    row.CreateCell(2).SetCellValue(models[i].ABFlow);
+                    row.CreateCell(2).SetCellValue(models[i].Flow);
                     row.CreateCell(3).SetCellValue(models[i].APressure);
                     row.CreateCell(4).SetCellValue(models[i].BPressure);
-                    row.CreateCell(5).SetCellValue(models[i].AFlow);
-                    row.CreateCell(6).SetCellValue(models[i].BFlow);
-                    row.CreateCell(7).SetCellValue(models[i].ABRatio);
                 }
                 workbook.Write(fs);
             }
