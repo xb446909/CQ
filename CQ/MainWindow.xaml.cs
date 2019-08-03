@@ -102,7 +102,7 @@ namespace CQ
                     {
                     if ((nID == 1) && (models1.Count > 0))
                     {
-                        string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + "_1.xlsx";
+                        string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + "_B(左).xlsx";
                         ExcelService.Instance.Save(FileName, models1);
                         models1.Clear();
                     }
@@ -163,7 +163,7 @@ namespace CQ
                     {
                         if ((nID == 1) && (models2.Count > 0))
                         {
-                            string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + "_2.xlsx";
+                            string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + "_A(右).xlsx";
                             ExcelService.Instance.Save(FileName, models2);
                             models2.Clear();
                         }
