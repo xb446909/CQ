@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,9 @@ namespace CQ
     /// </summary>
     public partial class MainWindow : Window
     {
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern void OutputDebugString(string message);
+
         private ManualResetEvent closeEvent = new ManualResetEvent(false);
         private Thread thread1 = null;
         private Thread thread2 = null;
@@ -36,6 +40,7 @@ namespace CQ
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            OutputDebugString("===== 开始 =====\r\n");
             SerialPortService.Instance.SerialPort_ReadNewLine = SerialPort_NewLine;
             if (PLCService.Instance.Connect() == false)
             {
@@ -51,17 +56,24 @@ namespace CQ
         private void SerialPort_NewLine(int nSerialPort, string str)
         {
             string addr;
+            string szCurrentPath = System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            string output;
             if (nSerialPort == 1)
             {
-                addr = IniService.Instance.ReadIniData("扫码回复1", "地址", "M60", str + "Config.ini");
+                output = "左工位扫码枪接收到数据：" + str;
+                addr = IniService.Instance.ReadIniData("扫码回复1", "地址", "M60", szCurrentPath + "Config.ini");
                 Dispatcher.BeginInvoke(new Action(() => { Barcode1.Text = str; }));
             }
             else
             {
-                addr = IniService.Instance.ReadIniData("扫码回复2", "地址", "M64", str + "Config.ini");
+                output = "右工位扫码枪接收到数据：" + str;
+                addr = IniService.Instance.ReadIniData("扫码回复2", "地址", "M64", szCurrentPath + "Config.ini");
                 Dispatcher.BeginInvoke(new Action(() => { Barcode2.Text = str; }));
             }
+            OutputDebugString(output + "\r\n");
             PLCService.Instance.WriteUInt32(addr, 1);
+            output = "回复PLC 地址：" + addr + " 值：1";
+            OutputDebugString(output + "\r\n");
         }
 
         private void ThreadProc1()
@@ -98,14 +110,17 @@ namespace CQ
                     UInt32 nAPressure = PLCService.Instance.ReadUInt32(APressure);
                     UInt32 nBPressure = PLCService.Instance.ReadUInt32(BPressure);
 
+                    OutputDebugString(string.Format("左工位读取到数据: 编号 {0}\r\n", nID));
+
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                    if ((nID == 1) && (models1.Count > 0))
-                    {
-                        string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + "_B(左).xlsx";
-                        ExcelService.Instance.Save(FileName, models1);
-                        models1.Clear();
-                    }
+                        if ((nID == 1) && (models1.Count > 0))
+                        {
+                            string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + "_B(左).xlsx";
+                            ExcelService.Instance.Save(FileName, models1);
+                            OutputDebugString(string.Format("左工位保存数据到Excel:{0}", FileName));
+                            models1.Clear();
+                        }
 
                         models1.Add(new Model()
                         {
@@ -159,12 +174,15 @@ namespace CQ
                     UInt32 nAPressure = PLCService.Instance.ReadUInt32(APressure);
                     UInt32 nBPressure = PLCService.Instance.ReadUInt32(BPressure);
 
+                    OutputDebugString(string.Format("右工位读取到数据: 编号 {0}\r\n", nID));
+
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                         if ((nID == 1) && (models2.Count > 0))
                         {
                             string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + "_A(右).xlsx";
                             ExcelService.Instance.Save(FileName, models2);
+                            OutputDebugString(string.Format("右工位保存数据到Excel:{0}", FileName));
                             models2.Clear();
                         }
 
