@@ -32,7 +32,6 @@ namespace CQ
         }
 
         private SerialPort serialPort1 = null;
-        private SerialPort serialPort2 = null;
         public ReadNewLine SerialPort_ReadNewLine = null;
 
         private SerialPort Open(string szSection)
@@ -86,7 +85,6 @@ namespace CQ
         private SerialPortService()
         {
             serialPort1 = Open("扫码枪1");
-            serialPort2 = Open("扫码枪2");
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -95,10 +93,6 @@ namespace CQ
             if (serialPort == serialPort1)
             {
                 SerialPort_ReadNewLine?.Invoke(1, serialPort.ReadLine());
-            }
-            else if (serialPort == serialPort2)
-            {
-                SerialPort_ReadNewLine?.Invoke(2, serialPort.ReadLine());
             }
         }
 

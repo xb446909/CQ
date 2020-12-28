@@ -46,25 +46,27 @@ namespace CQ
 
                 if (File.Exists(FileName))
                 {
-                    FileStream fs = new FileStream(FileName, FileMode.Open, FileAccess.Read);
-                    workbook = NPOI.SS.UserModel.WorkbookFactory.Create(fs);
-                    int nSheets = workbook.NumberOfSheets;
-                    if (nSheets > 0)
+                    using (FileStream fs = new FileStream(FileName, FileMode.Open, FileAccess.Read))
                     {
-                        var sheet = workbook.GetSheetAt(0);
-                        int nRows = sheet.LastRowNum + 1;
-                        for (int i = 0; i < models.Count; i++)
+                        workbook = NPOI.SS.UserModel.WorkbookFactory.Create(fs);
+                        int nSheets = workbook.NumberOfSheets;
+                        if (nSheets > 0)
                         {
-                            var row = sheet.CreateRow(i + nRows);
-                            row.CreateCell(0).SetCellValue(models[i].Id);
-                            row.CreateCell(0).SetCellValue(models[i].Time);
-                            row.CreateCell(1).SetCellValue(models[i].QRCode);
-                            row.CreateCell(2).SetCellValue(models[i].Flow);
-                            row.CreateCell(3).SetCellValue(models[i].APressure);
-                            row.CreateCell(4).SetCellValue(models[i].BPressure);
+                            var sheet = workbook.GetSheetAt(0);
+                            int nRows = sheet.LastRowNum + 1;
+                            for (int i = 0; i < models.Count; i++)
+                            {
+                                var row = sheet.CreateRow(i + nRows);
+                                row.CreateCell(0).SetCellValue(models[i].Id);
+                                row.CreateCell(1).SetCellValue(models[i].Time);
+                                row.CreateCell(2).SetCellValue(models[i].QRCode);
+                                row.CreateCell(3).SetCellValue(models[i].Flow);
+                                row.CreateCell(4).SetCellValue(models[i].APressure);
+                                row.CreateCell(5).SetCellValue(models[i].BPressure);
+                            }
                         }
+                        fs.Close();
                     }
-                    fs.Close();
                 }
                 else
                 {
@@ -102,8 +104,11 @@ namespace CQ
                     }
                 }
 
-                FileStream fs_write = new FileStream(FileName, FileMode.Create);
-                workbook.Write(fs_write);
+                using (FileStream fs_write = new FileStream(FileName, FileMode.Create))
+                {
+                    workbook.Write(fs_write);
+                    fs_write.Close();
+                }
             }
             catch (Exception ex)
             {
