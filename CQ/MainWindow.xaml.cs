@@ -38,6 +38,7 @@ namespace CQ
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             OutputDebugString("===== 开始 =====\r\n");
+
             SerialPortService.Instance.SerialPort_ReadNewLine = SerialPort_NewLine;
             if (PLCService.Instance.Connect() == false)
             {
@@ -83,6 +84,8 @@ namespace CQ
 
             string Start = IniService.Instance.ReadIniData("启动信号1", "地址", "DB2.28", str + "Config.ini");
 
+            string scanAddr = IniService.Instance.ReadIniData("扫码回复1", "地址", "M60", str + "Config.ini");
+
             bool bLastStart = false;
             bool bStart = false;
 
@@ -96,6 +99,7 @@ namespace CQ
                 bStart = PLCService.Instance.ReadBool(Start);
                 if ((bLastStart == false) && (bStart == true))
                 {
+                    PLCService.Instance.WriteUInt32(scanAddr, 0);
                     UInt32 nID = PLCService.Instance.ReadUInt32(ID);
                     float dbFlow = PLCService.Instance.ReadFloat(Flow);
                     UInt32 nAPressure = PLCService.Instance.ReadUInt32(APressure);
@@ -103,26 +107,23 @@ namespace CQ
 
                     OutputDebugString(string.Format("左工位读取到数据: 编号 {0}\r\n", nID));
 
+                    Model model = new Model()
+                    {
+                        Date = DateTime.Now.ToString("d"),
+                        Time = DateTime.Now.ToString("T"),
+                        Id = nID.ToString(),
+                        QRCode = Barcode1.Text,
+                        Flow = dbFlow.ToString(),
+                        APressure = nAPressure.ToString(),
+                        BPressure = nBPressure.ToString(),
+                    };
+
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        if ((nID == 1) && (models1.Count > 0))
-                        {
-                            string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + ".xlsx";
-                            ExcelService.Instance.Save(FileName, models1);
-                            OutputDebugString(string.Format("工位保存数据到Excel:{0}", FileName));
-                            models1.Clear();
-                        }
+                        string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + ".xlsx";
+                        ExcelService.Instance.Save(FileName, model);
 
-                        models1.Add(new Model()
-                        {
-                            Date = DateTime.Now.ToString("d"),
-                            Time = DateTime.Now.ToString("T"),
-                            Id = nID.ToString(),
-                            QRCode = Barcode1.Text,
-                            Flow = dbFlow.ToString(),
-                            APressure = nAPressure.ToString(),
-                            BPressure = nBPressure.ToString(),
-                        });
+                        models1.Add(model);
                     }));
                 }
                 bLastStart = bStart;
