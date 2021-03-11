@@ -105,23 +105,25 @@ namespace CQ
                     UInt32 nAPressure = PLCService.Instance.ReadUInt32(APressure);
                     UInt32 nBPressure = PLCService.Instance.ReadUInt32(BPressure);
 
-                    OutputDebugString(string.Format("左工位读取到数据: 编号 {0}\r\n", nID));
-
-                    Model model = new Model()
-                    {
-                        Date = DateTime.Now.ToString("d"),
-                        Time = DateTime.Now.ToString("T"),
-                        Id = nID.ToString(),
-                        QRCode = Barcode1.Text,
-                        Flow = dbFlow.ToString(),
-                        APressure = nAPressure.ToString(),
-                        BPressure = nBPressure.ToString(),
-                    };
+                    OutputDebugString(string.Format("读取到数据: 编号 {0}\r\n", nID));
 
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
+                        Model model = new Model()
+                        {
+                            Date = DateTime.Now.ToString("d"),
+                            Time = DateTime.Now.ToString("T"),
+                            Id = nID.ToString(),
+                            QRCode = Barcode1.Text,
+                            Flow = dbFlow.ToString(),
+                            APressure = nAPressure.ToString(),
+                            BPressure = nBPressure.ToString(),
+                        };
+
                         string FileName = ExcelFilePath + DateTime.Now.ToString("yyyy-MM-dd") + ".xlsx";
+                        OutputDebugString(string.Format("保存数据到: {0}\r\n", FileName));
                         ExcelService.Instance.Save(FileName, model);
+                        OutputDebugString("保存完成");
 
                         models1.Add(model);
                     }));
